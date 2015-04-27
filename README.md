@@ -16,9 +16,9 @@ so no need to provide all background informations like url, query, authorization
 
 Warning
 --------
-**It is in development mode , so some of apis may not work.**
-
-right now only application/json response/request type is supported, so no upload, download kinda things.
+* It is in development mode , so some of apis may not work.
+* Tested on some gmail apis only.
+* Right now only application/json response/request type is supported, so no upload, download kinda things.
 
 Features
 --------
