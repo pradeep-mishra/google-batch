@@ -1,0 +1,29 @@
+{
+  "name": "google-batch",
+  "version": "0.0.1",
+  "description": "Sends batch requests to Google REST API",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pradeep-mishra/google-batch.git"
+  },
+  "keywords": [
+    "batch",
+    "google",
+    "apis",
+    "google-batch",
+    "batch-google",
+    "googleapi",
+    "rest",
+    "api"
+  ],
+  "author": {
+    "name": "Pradeep Mishra",
+    "email": "pradeep23oct@gmail.com"
+  },
+  "licenses": "MIT",
+  "dependencies": {
+    "google-auth-library": "^0.9.4",
+    "http-string-parser": "0.0.4",
+    "request": "^2.55.0"
+  }
+}
