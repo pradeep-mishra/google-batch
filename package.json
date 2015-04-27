@@ -14,7 +14,8 @@
     "batch-google",
     "googleapi",
     "rest",
-    "api"
+    "api",
+    "batch-call"
   ],
   "author": {
     "name": "Pradeep Mishra",
