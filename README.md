@@ -35,24 +35,35 @@ Example usage
 var googleBatch = require('google-batch');
 var batch = new googleBatch();
 
+// important, always require googleapis using google-batch require() method.
+var google = googleBatch.require('googleapis'); 
+
+
 // how to use google OAuth instance to provide access token to google-batch
-var google = require('googleapis');
-var OAuth2 = google.auth.OAuth2;
-var oauthClient = new OAuth2;
+var oauthClient = new google.auth.OAuth2;
 oauthClient.setCredentials({
     access_token: "MY_ACCESS_TOKEN"
 });
 batch.setAuth(oauthClient);
-        // OR
+
+// OR simply pass access_token directly
 batch.setAuth("MY_ACCESS_TOKEN");
 
-        // OR 
-        //just put OAuth in google service object, google-batch will extract it from there.
+
+var gmail = google.gmail({
+    version : 'v1'
+});
+
+/* 
+never provide oauth to to google service constructer like this
+it will bypass patch in new version of module
 
 var gmail = google.gmail({
     version : 'v1',
-    auth : oauthClient
+    oauth : oauthClient
 });
+
+*/
 
 // now lets make some batch calls
 var params1 = {
@@ -67,7 +78,12 @@ var params2 = {
     userId : "me"
 };
 
-// notice googleBatch property, this property is required by google-batch to identify batch call and prevent it to make request.
+/*
+
+notice googleBatch property, this property is required by google-batch 
+to identify batch call and prevent it to make request.
+
+*/
 
 // use add() method to add calls in batch
 // yes we can use gogoleapis method directly :)
@@ -75,7 +91,7 @@ var params2 = {
 batch.add(gmail.users.messages.list(params1));
 batch.add(gmail.users.messages.list(params2));
 
-batch.exec(function(errs, responses){
+batch.exec(function(errors, responses){
     console.log(responses);
     // clear batch queue to make new batch call using same instance 
     batch.clear();

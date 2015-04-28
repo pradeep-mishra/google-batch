@@ -1,29 +1,7 @@
 var request = require('request');
 var querystring = require('querystring');
 var parser = require('http-string-parser');
-var authLibInstance = new (require('google-auth-library/lib/transporters.js'));
-var authRequest = authLibInstance.request || authLibInstance._oldRequest;
-
-function patchGoogleAuthLibrary(){
-	var googleAuthLibrary = require('google-auth-library/lib/transporters.js');
-	if(typeof(googleAuthLibrary.prototype._oldRequest) !== "function"){
-		googleAuthLibrary.prototype.oldRequest = googleAuthLibrary.prototype.request;
-		googleAuthLibrary.prototype.request = requestPatch; 
-	}
-}
-
-function requestPatch(opts, opt_callback) {
-	opts = authLibInstance.configure(opts);
-  	if(opts && opts.qs && opts.qs.googleBatch){
-  			delete opts.qs.googleBatch;
-  			return opts;	
-  	}
-  	if(opts && opts.json && opts.json.googleBatch){
-  			delete opts.json.googleBatch;
-  			return opts;	
-  	} 	
-  	return authRequest(opts, opt_callback);
-}
+var fs = require('fs');
 
 function findToken(opts){
 	var token = null;
@@ -75,17 +53,22 @@ function removeGarbage(initial, item){
 	return initial;
 }
 
+function clearCache(module){
+	if(require.resolve(module) && require.cache[require.resolve(module)]){
+    	try{ delete require.cache[require.resolve(module)] }catch(e){ }
+	}
+}
+
 function GoogleBatch(){
-	patchGoogleAuthLibrary();
 	var apiCalls = [ ];
 	var token = null;
 	this.setAuth = function(auth){
 		if(typeof(auth) === "string"){
 			token = auth;
 		}else if(auth && 
-			oauth2Client.credentials && 
-			oauth2Client.credentials.access_token){
-				token = oauth2Client.credentials.access_token;
+			auth.credentials && 
+			auth.credentials.access_token){
+				token = auth.credentials.access_token;
 		}
 		return this;
 	}
@@ -120,11 +103,9 @@ function GoogleBatch(){
 			multipart : getMultipart(apiCalls)
 		}
 		var req = request(opts);
-
 		req.on('error', function (e) {
 			return callback([e]);
 		});
-
 	    req.on('response', function (res) {
 	    	var boundary = res.headers['content-type'].split('boundary=');
 			if(boundary.length < 2){
@@ -155,6 +136,18 @@ function GoogleBatch(){
 	}
 }
 
+GoogleBatch.require = function(moduleName){
+	if(moduleName === "googleapis"){
+		try{
+			var data = "module.exports = require('" + __dirname + "/transport.js');"
+			fs.writeFileSync('./node_modules/googleapis/lib/transporters.js', data);
+			clearCache('googleapis');
+		}catch(e){	
+			console.log('error while patching googleapis', e.stack);		
+		}
+	}
+	return require(moduleName);		
+}
 
 module.exports = GoogleBatch;
 
