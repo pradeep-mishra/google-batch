@@ -55,8 +55,8 @@ var gmail = google.gmail({
 });
 
 /* 
-never provide oauth to to google service constructer like this
-it will bypass patch in new version of module
+Do not use oauth object in google service constructer like this
+it may bypass patch in new version of googleapis module
 
 var gmail = google.gmail({
     version : 'v1',
@@ -97,6 +97,15 @@ batch.exec(function(errors, responses){
     batch.clear();
 });
 
+
+/* 
+
+In case you are getting hard time decoding raw (base64) data of gmail body 
+you case use this api.
+
+*/
+
+googleBatch.decodeRawData(rawBody);
 
 ```
 

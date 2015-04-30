@@ -1,6 +1,6 @@
 {
   "name": "google-batch",
-  "version": "0.0.3",
+  "version": "0.0.6",
   "description": "Sends batch requests to Google REST API",
   "repository": {
     "type": "git",
@@ -23,7 +23,6 @@
   },
   "licenses": "MIT",
   "dependencies": {
-    "googleapis": "^2.0.2",
     "http-string-parser": "0.0.4",
     "request": "^2.55.0"
   }

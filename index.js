@@ -17,15 +17,16 @@ function findToken(opts){
 function getMultipart(calls){
 	return calls.map(function (opts) {
 		opts.qs = opts.qs || { };
+		opts.json = opts.json || { } ;
+		var contentId = (opts.qs.contentId || opts.json.contentId || Math.floor(Math.random() * Date.now()));
 		var options = {
 			'Content-Type': 'application/http',
-			'Content-ID' : Math.floor(Math.random() * Date.now()),
+			'Content-ID' : contentId,
 			'body' : 'GET ' + opts.url + (Object.keys(opts.qs).length ? '?' + querystring.stringify(opts.qs) : "") +  '\n'
 		};
 		if(opts.method !== "GET"){
-			var body = (opts.json || opts.data || opts.body);
 			options.body +=  'Content-Type: application/json'  + '\n\n' +
-        	JSON.stringify(body);	
+        	JSON.stringify(opts.json);	
 		}
 		return options;
 	});
@@ -139,14 +140,26 @@ function GoogleBatch(){
 GoogleBatch.require = function(moduleName){
 	if(moduleName === "googleapis"){
 		try{
-			var data = "module.exports = require('" + __dirname + "/transport.js');"
-			fs.writeFileSync('./node_modules/googleapis/lib/transporters.js', data);
-			clearCache('googleapis');
-		}catch(e){	
-			console.log('error while patching googleapis', e.stack);		
+            var data = "module.exports = require('" + __dirname + "/transport.js');"
+            var existingGoogle = require.resolve(moduleName);
+            if(existingGoogle){
+                existingGoogle = existingGoogle.substr(0, existingGoogle.indexOf(moduleName)) + 'googleapis/lib/transporters.js';
+                fs.writeFileSync(existingGoogle, data);
+            }else{
+                throw Error('googleapis module not found');
+            }
+            clearCache('googleapis');
+        }catch(e){
+			var error = new Error('Error while patching googleapis');
+			error.stack = e.stack;
+			throw error;
 		}
 	}
-	return require(moduleName);		
+	return require(moduleName);
+}
+
+GoogleBatch.decodeRawData = function(body){
+	return (new Buffer(body.replace(/-/g, '+').replace(/_/g, '/'), "base64")).toString();
 }
 
 module.exports = GoogleBatch;
