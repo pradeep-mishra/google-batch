@@ -101,7 +101,7 @@ batch.exec(function(errors, responses){
 /* 
 
 In case you are getting hard time decoding raw (base64) data of gmail body 
-you case use this api.
+you can use this api.
 
 */
 
