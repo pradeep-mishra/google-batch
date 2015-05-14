@@ -1,0 +1,53 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'publish',
+1 verbose cli   'google-batch' ]
+2 info using npm@1.4.14
+3 info using node@v0.10.29
+4 warn using --force I sure hope you know what you are doing.
+5 verbose publish [ 'google-batch' ]
+6 verbose cache add [ 'google-batch', null ]
+7 verbose cache add name=undefined spec="google-batch" args=["google-batch",null]
+8 verbose parsed url { protocol: null,
+8 verbose parsed url   slashes: null,
+8 verbose parsed url   auth: null,
+8 verbose parsed url   host: null,
+8 verbose parsed url   port: null,
+8 verbose parsed url   hostname: null,
+8 verbose parsed url   hash: null,
+8 verbose parsed url   search: null,
+8 verbose parsed url   query: null,
+8 verbose parsed url   pathname: 'google-batch',
+8 verbose parsed url   path: 'google-batch',
+8 verbose parsed url   href: 'google-batch' }
+9 silly lockFile a2922f02-google-batch google-batch
+10 verbose lock google-batch /Users/pradeep/.npm/a2922f02-google-batch.lock
+11 silly lockFile a2922f02-google-batch google-batch
+12 silly lockFile a2922f02-google-batch google-batch
+13 verbose addNamed [ 'google-batch', '' ]
+14 verbose addNamed [ null, '*' ]
+15 silly lockFile f1cac1f5-google-batch google-batch@
+16 verbose lock google-batch@ /Users/pradeep/.npm/f1cac1f5-google-batch.lock
+17 silly addNameRange { name: 'google-batch', range: '*', hasData: false }
+18 verbose registry.get google-batch not expired, no request
+19 silly addNameRange number 2 { name: 'google-batch', range: '*', hasData: true }
+20 silly addNameRange versions [ 'google-batch', [] ]
+21 error TypeError: Cannot read property 'latest' of undefined
+21 error     at next (/usr/local/lib/node_modules/npm/lib/cache/add-named.js:216:35)
+21 error     at /usr/local/lib/node_modules/npm/lib/cache/add-named.js:204:5
+21 error     at RegClient.get_ (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/get.js:104:14)
+21 error     at RegClient.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/get.js:43:12)
+21 error     at fs.js:271:14
+21 error     at /usr/local/lib/node_modules/npm/node_modules/graceful-fs/graceful-fs.js:105:5
+21 error     at Object.oncomplete (fs.js:107:15)
+22 error If you need help, you may report this *entire* log,
+22 error including the npm and node versions, at:
+22 error     <http://github.com/npm/npm/issues>
+23 error System Darwin 14.3.0
+24 error command "/usr/local/bin/node" "/usr/local/bin/npm" "publish" "google-batch"
+25 error cwd /Users/pradeep/git/google-batch
+26 error node -v v0.10.29
+27 error npm -v 1.4.14
+28 error type non_object_property_load
+29 verbose exit [ 1, true ]

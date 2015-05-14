@@ -1,7 +1,7 @@
-var request = require('request');
+var request 	= require('request');
 var querystring = require('querystring');
-var parser = require('http-string-parser');
-var fs = require('fs');
+var parser 		= require('http-string-parser');
+var fs 			= require('fs');
 
 function findToken(opts){
 	var token = null;
