@@ -4,7 +4,7 @@
 
 google-batch
 =========
-Sends batch requests to Google REST API
+Sends Batch Requests to Google REST API
 =======
 
 
