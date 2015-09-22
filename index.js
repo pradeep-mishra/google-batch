@@ -10,7 +10,7 @@ function findToken(opts){
 			token =  item.headers.Authorization.replace(/^Bearer/, "").trim();
 			return true;
 		}
-	});	
+	});
 	return token;
 }
 
@@ -26,7 +26,7 @@ function getMultipart(calls){
 		};
 		if(opts.method !== "GET"){
 			options.body +=  'Content-Type: application/json'  + '\n\n' +
-        	JSON.stringify(opts.json);	
+        	JSON.stringify(opts.json);
 		}
 		return options;
 	});
@@ -41,7 +41,7 @@ function parseHTTPStrings(item){
 	}
 	Object.keys(data.headers).forEach(function(item){
 		returnValues.headers[item] = data.headers[item];
-	});	      		
+	});
 	returnValues.body = data.body;
 	try{  returnValues.body = JSON.parse(returnValues.body) }catch(e){ }
 	return returnValues;
@@ -66,8 +66,8 @@ function GoogleBatch(){
 	this.setAuth = function(auth){
 		if(typeof(auth) === "string"){
 			token = auth;
-		}else if(auth && 
-			auth.credentials && 
+		}else if(auth &&
+			auth.credentials &&
 			auth.credentials.access_token){
 				token = auth.credentials.access_token;
 		}
@@ -91,8 +91,8 @@ function GoogleBatch(){
 		if(!token){
 			token = findToken(apiCalls);
 			if(!token){
-				return callback([Error('Auth Token not found')]);
-			}	
+				return callback(new Error('Auth Token not found'));
+			}
 		}
 		var opts = {
 			url : 'https://www.googleapis.com/batch',
@@ -110,9 +110,9 @@ function GoogleBatch(){
 	    req.on('response', function (res) {
 	    	var boundary = res.headers['content-type'].split('boundary=');
 			if(boundary.length < 2){
-				return callback([Error('Wrong content-type :' + res.headers['content-type'])]);
+				return callback(new Error('Wrong content-type :' + res.headers['content-type']));
 			}
-			var boundary = boundary[1];	
+			var boundary = boundary[1];
 			var responsData = "";
 			res.on('data', function(data){
 				responsData += data.toString();
@@ -123,17 +123,19 @@ function GoogleBatch(){
 							.reduce(removeGarbage, [ ])
 							.map(parseHTTPStrings);
 
-				var errors = responses.map(function(item){
-					if(item.body && item.body.error){
-						return item.body.error;
-					}
-					return null;
+				var errors = responses.filter(function(item){
+					return (item.body && item.body.error);
+				}).map(function(item) {
+					return item.body.error;
 				});
-				callback(errors, responses);
+				if(errors.length !== 0) {
+					return callback(new Error(errors.toString()), responses);
+				}
+				callback(null, responses);
 	      });
-			
+
 	    });
-			
+
 	}
 }
 
