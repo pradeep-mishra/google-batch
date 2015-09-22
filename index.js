@@ -129,9 +129,9 @@ function GoogleBatch(){
 					return item.body.error;
 				});
 				if(errors.length !== 0) {
-					return callback(new Error(errors.toString()), responses);
+					return callback(new Error(errors.toString()), responses, errors);
 				}
-				callback(null, responses);
+				callback(null, responses, null);
 	      });
 
 	    });
