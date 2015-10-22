@@ -11,7 +11,7 @@ Sends Batch Requests to Google REST API
 (C) Pradeep Mishra <pradeep23oct@gmail.com>
 
 **google-batch** is very easy to use, it seamlessly integrate with googleapis (official node.js sdk) module.
-so no need to provide all background informations like url, query, authorizations.
+so no need to provide all background information like url, query, authorizations.
 
 
 Warning
@@ -56,7 +56,7 @@ var gmail = google.gmail({
 
 /* 
 Do not use oauth object in google service constructer like this
-it may bypass patch in new version of googleapis module
+it may bypass patch in a new version of googleapis module
 
 var gmail = google.gmail({
     version : 'v1',
@@ -81,7 +81,7 @@ var params2 = {
 /*
 
 notice googleBatch property, this property is required by google-batch 
-to identify batch call and prevent it to make request.
+to identify batch call and prevent it to make the request.
 
 */
 
@@ -101,7 +101,7 @@ batch.exec(function(error, responses, errorDetails){
 
 /* 
 
-In case you are getting hard time decoding raw (base64) data of gmail body 
+In case you are getting a hard time decoding raw (base64) data of gmail body 
 you can use this api.
 
 
