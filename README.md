@@ -91,7 +91,7 @@ to identify batch call and prevent it to make request.
 batch.add(gmail.users.messages.list(params1));
 batch.add(gmail.users.messages.list(params2));
 
-batch.exec(function(errors, responses){
+batch.exec(function(error, responses, errorDetails){
     console.log(responses);
     // clear batch queue to make new batch call using same instance 
     batch.clear();
