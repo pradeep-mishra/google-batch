@@ -1,3 +1,4 @@
+var path        = require('path');
 var request 	= require('request');
 var querystring = require('querystring');
 var parser 		= require('http-string-parser');
@@ -142,7 +143,9 @@ function GoogleBatch(){
 GoogleBatch.require = function(moduleName){
 	if(moduleName === "googleapis"){
 		try{
-            var data = "module.exports = require('" + __dirname + "/transport.js');"
+            // Make sure that forward slashes are used on windows
+            var transportJsPath = path.join(__dirname, '/transport.js').replace(/\\/g, '/');
+            var data = "module.exports = require('" + transportJsPath + "');"
             var existingGoogle = require.resolve(moduleName);
             if(existingGoogle){
                 existingGoogle = existingGoogle.substr(0, existingGoogle.indexOf(moduleName)) + 'googleapis/lib/transporters.js';
