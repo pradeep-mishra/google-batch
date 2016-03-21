@@ -106,7 +106,7 @@ function GoogleBatch(){
 		}
 		var req = request(opts);
 		req.on('error', function (e) {
-			return callback([e]);
+			return callback(e);
 		});
 	    req.on('response', function (res) {
 	    	var boundary = res.headers['content-type'].split('boundary=');
