@@ -108,10 +108,14 @@ function GoogleBatch(){
 		req.on('error', function (e) {
 			return callback(e);
 		});
-	    req.on('response', function (res) {
-	    	var boundary = res.headers['content-type'].split('boundary=');
+	  req.on('response', function (res) {
+	  	if (res.statusCode >= 400) {
+	  		return callback(new Error('Google Batch Request failed with code: ' + res.statusCode));
+	  	}
+
+	    var boundary = res.headers['content-type'].split('boundary=');
 			if(boundary.length < 2){
-				return callback(new Error('Wrong content-type :' + res.headers['content-type']));
+				return callback(new Error('Wrong content-type: ' + res.headers['content-type']));
 			}
 			var boundary = boundary[1];
 			var responsData = "";
@@ -133,9 +137,9 @@ function GoogleBatch(){
 					return callback(new Error(errors.toString()), responses, errors);
 				}
 				callback(null, responses, null);
-	      });
-
 	    });
+
+	  });
 
 	}
 }
@@ -143,18 +147,18 @@ function GoogleBatch(){
 GoogleBatch.require = function(moduleName){
 	if(moduleName === "googleapis"){
 		try{
-            // Make sure that forward slashes are used on windows
-            var transportJsPath = path.join(__dirname, '/transport.js').replace(/\\/g, '/');
-            var data = "module.exports = require('" + transportJsPath + "');"
-            var existingGoogle = require.resolve(moduleName);
-            if(existingGoogle){
-                existingGoogle = existingGoogle.substr(0, existingGoogle.indexOf(moduleName)) + 'googleapis/lib/transporters.js';
-                fs.writeFileSync(existingGoogle, data);
-            }else{
-                throw Error('googleapis module not found');
-            }
-            clearCache('googleapis');
-        }catch(e){
+      // Make sure that forward slashes are used on windows
+      var transportJsPath = path.join(__dirname, '/transport.js').replace(/\\/g, '/');
+      var data = "module.exports = require('" + transportJsPath + "');"
+      var existingGoogle = require.resolve(moduleName);
+      if(existingGoogle){
+          existingGoogle = existingGoogle.substr(0, existingGoogle.indexOf(moduleName)) + 'googleapis/lib/transporters.js';
+          fs.writeFileSync(existingGoogle, data);
+      }else{
+          throw Error('googleapis module not found');
+      }
+      clearCache('googleapis');
+    }catch(e){
 			var error = new Error('Error while patching googleapis');
 			error.stack = e.stack;
 			throw error;
@@ -168,5 +172,3 @@ GoogleBatch.decodeRawData = function(body){
 }
 
 module.exports = GoogleBatch;
-
-
