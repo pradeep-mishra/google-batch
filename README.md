@@ -19,6 +19,7 @@ Warning
 * It is in development mode , so some of apis may not work.
 * Tested on some gmail apis only.
 * Right now only application/json response/request type is supported, so no upload, download kinda things.
+* Not compatible with ES6 
 
 Features
 --------
